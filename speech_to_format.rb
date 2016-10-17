@@ -1,10 +1,13 @@
+require 'bundler/setup'
 require 'pocketsphinx-ruby'
+
+include Pocketsphinx
 
 # Pocketsphinx::LiveSpeechRecognizer.new.recognize do |speech|
 # 	puts speech
 # end
 
-microphone = Pocketsphinx::Microphone.new
+microphone = Microphone.new
 
 File.open("test.raw", "wb") do |file|
   microphone.record do
@@ -19,36 +22,13 @@ File.open("test.raw", "wb") do |file|
   end
 end
 
-decoder = Pocketsphinx::Decoder.new(Pocketsphinx::Configuration.default)
+decoder = Decoder.new(Configuration.default)
 decoder.decode 'test.raw'
 
-decoder.hypothesis
-
-backslash_replacements = {
-	"backslash end quote" => "end quote",
-	"backslash quote" => "quote",
-	"backslash enter" => "enter",
-	"backslash tab" => "tab",
-	"backslash period" => "period",
-	"backslash comma" => "comma",
-	"backslash exclamation point" => "exclamation point",
-	"backslash question mark" => "question mark",
-	"backslash ampersand" => "ampersand",
-	"backslash modulo" => "modulo",
-	"backslash end parentheses" => "end parentheses",
-	"backslash parentheses " => "parentheses",
-	"backslash dash" => "dash",
-	"backslash semi colon" => "semi colon",
-	"backslash colon" => "colon",
-	"backslash end brackets" => "end brackets",
-	"backslash brackets" => "brackets",
-	"backslash slash" => "slash",
-	"backslash asterisk" => "asterisk",
-	"backslash underscore" => "underscore"
-}
+final = decoder.hypothesis
 
 spoken_repacements = {
-	" end quote " => "\"",
+	" end quote" => "\"",
 	"quote " => "\"",
 	"enter" => "\n",
 	"tab" => "\t",
@@ -70,6 +50,38 @@ spoken_repacements = {
 	" underscore " => "_"
 }
 
+backslash_replacements = {
+	"backslash \"" => "quote",
+	"backslash \n" => "enter",
+	"backslash \t" => "tab",
+	"backslash ." => "period",
+	"backslash ," => "comma",
+	"backslash !" => "exclamation point",
+	"backslash ?" => "question mark",
+	"backslash &" => "ampersand",
+	"backslash %" => "modulo",
+	"backslash )" => "end parentheses",
+	"backslash (" => "parentheses",
+	"backslash -" => "dash",
+	"backslash ;" => "semi colon",
+	"backslash :" => "colon",
+	"backslash ]" => "end brackets",
+	"backslash [" => "brackets",
+	"backslash /" => "slash",
+	"backslash *" => "asterisk",
+	"backslash _" => "underscore"
+}
+
+spoken_repacements.each do |key, value|
+	final.gsub(key, value)
+end
+
+backslash_replacements.each do |key, value|
+	final.gsub(key, value)
+end
+
 File.open("formatted.txt", "a") do |file|
 	file.write(final)
 end
+
+p final
