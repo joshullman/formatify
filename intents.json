@@ -1,0 +1,40 @@
+{
+	"intents": [
+		{
+
+			"intent": "Command",
+			"slots": [
+
+				{
+					"name": "",
+					"type": ""
+				},
+
+				{
+					"name": "",
+					"type": ""
+				}
+
+			]
+		},
+
+		{
+
+			"intent": "Backslash",
+			"slots": [
+
+				{
+					"name": "",
+					"type": ""
+				},
+
+				{
+					"name": "",
+					"type": ""
+				}
+
+			]
+		},
+
+	]
+}
